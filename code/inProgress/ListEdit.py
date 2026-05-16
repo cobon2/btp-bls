@@ -2,16 +2,34 @@ import tkinter as tk
 from tkinter import ttk as ttk
 import pandas as pan
 
+
 # Testing Variables here
 testvariable = ["art", "two", "son", "pie", "law",
                 "sir", "way", "map", "mom", "mud", 
                 "tea", "dad", "hat", "lab", "ear",
                 "fun", "cut", "fax", "pan", "owe"]
 
+print(str(testvariable))
+
 # functions here
 def placeholder():
     print("placeholder() Called.")
     pass
+
+def addEntry():
+    editListbox.insert(editListbox.size(), editEntrybox.get())
+    editListbox.config(height = editListbox.size())
+
+def deleteEntry():
+    for i in reversed(editListbox.curselection()):
+        editListbox.delete(i)
+
+def saveList():
+    outputlist = []
+    print(editListbox.curselection())
+    outputlist = list(editListbox.get(0, tk.END))
+    print(f"[saveList] - Currently saved list: {str(outputlist)}")
+    return outputlist
 
 # window
 window = tk.Tk()
@@ -55,13 +73,13 @@ editEntrybox = tk.Entry(master=queryFrame)
 editEntrybox.pack(side = tk.RIGHT)
 
 # buttonAccess
-addButton = tk.Button(text="Add", command=placeholder, master= buttonAccess)
+addButton = tk.Button(text="Add", command=addEntry, master= buttonAccess)
 addButton.grid(row=0, column=0)
 
-deleteButton = tk.Button(text="Delete", command=placeholder, master= buttonAccess)
+deleteButton = tk.Button(text="Delete", command=deleteEntry, master= buttonAccess)
 deleteButton.grid(row=0, column=1)
 
-saveButton = tk.Button(text="Save", command=placeholder, master= buttonAccess)
+saveButton = tk.Button(text="Save", command=saveList, master= buttonAccess)
 saveButton.grid(row=0, column=2)
 
 # wordFrame Scrollbar Access
@@ -70,3 +88,7 @@ wordFrameScrollbar.config(command=editListbox.yview)
 
 # mainloop()
 window.mainloop()
+
+# tasks:
+# Front-End: Done!
+# Back-End (functionality): WIP
