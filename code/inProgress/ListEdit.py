@@ -31,33 +31,33 @@ def saveList():
     print(f"[saveList] - Currently saved list: {str(outputlist)}")
     return outputlist
 
-# window
-window = tk.Tk()
-window.title = "Edit"
+# windowWordEdit
+windowWordEdit = tk.Tk()
+windowWordEdit.title = "Edit"
 
 # Three frames:
 ## listbox
-wordFrame = ttk.Frame(master=window)
-wordFrame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+wordEditFrame = ttk.Frame(master=windowWordEdit)
+wordEditFrame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
 ## query
-queryFrame = ttk.Frame(master=window)
-queryFrame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+queryEditFrame = ttk.Frame(master=windowWordEdit)
+queryEditFrame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
-buttonAccess = ttk.Frame()
-buttonAccess.rowconfigure(0, weight=1)
-buttonAccess.columnconfigure(0, weight=1)
-buttonAccess.columnconfigure(1, weight=1)
-buttonAccess.columnconfigure(2, weight=1)
-buttonAccess.columnconfigure(3, weight=1)
-buttonAccess.pack()
+buttonWordEditAccess = ttk.Frame()
+buttonWordEditAccess.rowconfigure(0, weight=1)
+buttonWordEditAccess.columnconfigure(0, weight=1)
+buttonWordEditAccess.columnconfigure(1, weight=1)
+buttonWordEditAccess.columnconfigure(2, weight=1)
+buttonWordEditAccess.columnconfigure(3, weight=1)
+buttonWordEditAccess.pack()
 
 # scrollbar
-wordFrameScrollbar = ttk.Scrollbar(wordFrame)
-wordFrameScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+wordEditFrameScrollbar = ttk.Scrollbar(wordEditFrame)
+wordEditFrameScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
 # listbox
-editListbox = tk.Listbox(width = 12, selectmode=tk.MULTIPLE, master= wordFrame,
+editListbox = tk.Listbox(width = 12, selectmode=tk.MULTIPLE, master= wordEditFrame,
                          font=("Arial", 20))
 editListbox.pack()
 
@@ -67,27 +67,27 @@ for i in range(len(testvariable)):
 editListbox.config(height= editListbox.size())
 
 # Entrybox
-entryboxLabel = tk.Label(master=queryFrame, text="Add Entry:", font=("Arial", 10))
+entryboxLabel = tk.Label(master=queryEditFrame, text="Add Entry:", font=("Arial", 10))
 entryboxLabel.pack(side = tk.LEFT)
-editEntrybox = tk.Entry(master=queryFrame)
+editEntrybox = tk.Entry(master=queryEditFrame)
 editEntrybox.pack(side = tk.RIGHT)
 
-# buttonAccess
-addButton = tk.Button(text="Add", command=addEntry, master= buttonAccess)
+# buttonWordEditAccess
+addButton = tk.Button(text="Add", command=addEntry, master= buttonWordEditAccess)
 addButton.grid(row=0, column=0)
 
-deleteButton = tk.Button(text="Delete", command=deleteEntry, master= buttonAccess)
+deleteButton = tk.Button(text="Delete", command=deleteEntry, master= buttonWordEditAccess)
 deleteButton.grid(row=0, column=1)
 
-saveButton = tk.Button(text="Save", command=saveList, master= buttonAccess)
+saveButton = tk.Button(text="Save", command=saveList, master= buttonWordEditAccess)
 saveButton.grid(row=0, column=2)
 
-# wordFrame Scrollbar Access
-editListbox['yscrollcommand']=wordFrameScrollbar.set
-wordFrameScrollbar.config(command=editListbox.yview)
+# wordEditFrame Scrollbar Access
+editListbox['yscrollcommand']=wordEditFrameScrollbar.set
+wordEditFrameScrollbar.config(command=editListbox.yview)
 
 # mainloop()
-window.mainloop()
+windowWordEdit.mainloop()
 
 # tasks:
 # Front-End: Done!

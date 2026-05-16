@@ -38,13 +38,13 @@ mainNotebook.pack(expand=True)
 
 #####################################################################################################
 # Page 1: Translation Page
-placeholderTranslationPage = ttk.Frame(mainNotebook, width=1200, height = 1120) # Placeholder
+placeholderTranslationPage = ttk.Frame(mainNotebook) # Placeholder
 placeholderTranslationPage['padding'] = 10
 placeholderTranslationPage.pack(fill='both', expand=True)
 
 #####################################################################################################
 # Page 2: Game Activity
-gameactivityRoot = ttk.Frame(mainNotebook, width =1200, height=1120)
+gameactivityRoot = ttk.Frame(mainNotebook)
 ## (...) Note to self: main - pertains to the main 'main' and;
 ##                     root - pertains to the mode's parent or
 ##                            main.
