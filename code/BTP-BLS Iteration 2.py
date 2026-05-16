@@ -65,10 +65,6 @@ def randomSelection(iterable, length):
     print("[randomSelection] - resultBasket returned")
     return resultBasket
 
-def extractDataFrames(dataframe, levelName = "Level1"):
-    "extracts a column of a dataframe and is converted to a list."
-    nestedLevels = dataframe[levelName].tolist()
-    return nestedLevels
 
 
 ## UI
@@ -215,14 +211,102 @@ def imageFileNameConstant(fileName):
     filenameConstant = os.path.normpath(logoPath)
     return filenameConstant
 
+def dtColumns(DataFrame):
+    return DataFrame.columns.tolist()
+
+def extractDataFrames(dataframe, levelName = "Level1"):
+    "extracts a column of a dataframe and is converted to a list."
+    nestedLevels = dataframe[levelName].tolist()
+    return nestedLevels
+
+
 # main
 def BTPBLS():
+    """Main UI"""
+    # dataframe Initialization
+    levelsDataFrame = readExcel("Levels.xlsx")
+    dtColumnName = dtColumns(readExcel("Levels.xlsx"))
     # window(root) settings
     mainWindow = tk.Tk()
     mainWindow.title("BTP-BLS")
     mainWindow.geometry("600x400")
     logo = tk.PhotoImage(file = logoFileNameConstant())
     mainWindow.iconphoto(True, logo)
+
+    ## notebook declaration
+    mainNotebook = ttk.Notebook(mainWindow)
+    mainNotebook.pack(expand=True)
+
+
+    # Translation Page
+    placeholderTranslationPage = ttk.Frame(mainNotebook) # Placeholder
+    placeholderTranslationPage.pack(fill='both', expand=True)
+    
+
+    # Game UI
+    ## Main Frame
+    gameactivityRoot = tk.Frame(mainNotebook)
+    gameactivityRoot.rowconfigure(0, weight= 1)
+    gameactivityRoot.rowconfigure(1, weight= 1)
+    gameactivityRoot.rowconfigure(2, weight= 1)
+    gameactivityRoot.columnconfigure(0, weight= 1)
+    gameactivityRoot.columnconfigure(1, weight= 1)
+
+    ### Listbox
+    gameactivityLevelSelectionLabel = tk.Label(master=gameactivityRoot, text="Level:", font=("Arial", 20, "bold"))
+    gameactivityLevelSelectionLabel.grid(row=0, column=0, sticky="W")
+    gameactivityLevelSelection = tk.Listbox(master=gameactivityRoot, height=32)
+    gameactivityLevelSelection.grid(row=1, column=0, rowspan=2)
+    for i in range(len(dtColumnName)):
+        gameactivityLevelSelection.insert(i, dtColumnName[i])
+
+    ### Image Statistic
+    gameactivityImageLabel = tk.Label(master=gameactivityRoot, text="Statistic:", font=("Arial", 20, "bold"))
+    gameactivityImageLabel.grid(row=0, column=1, sticky="W")
+    gameactivityImageFrame = tk.Frame(master=gameactivityRoot)
+    gameactivityImageFrame.grid(row=1, column=1)
+    gameActivityImageLabel = tk.Label(gameactivityImageFrame, text="Play at least 10 games to show statistic.")
+    placeholderStatistic = tk.PhotoImage(file=imageFileNameConstant("PlaceholderStatistic.png"))
+    gameActivityImageLabel.config(image=placeholderStatistic, compound= tk.BOTTOM)
+    gameActivityImageLabel.pack(anchor='n')
+    
+    ### Mode Selection
+    gameactivityModeSelectionFrame = tk.Frame(master=gameactivityRoot)
+    gameactivityModeSelectionFrame.grid(row=2, column=1)
+    gameactivityModeSelectionFrame.rowconfigure(0, weight=1)
+    gameactivityModeSelectionFrame.rowconfigure(1, weight=1)
+    gameactivityModeSelectionFrame.rowconfigure(2, weight=1)
+    gameactivityModeSelectionFrame.columnconfigure(0, weight=1)
+    gameactivityModeSelectionFrame.columnconfigure(1, weight=1)
+
+    gameactivityModeSelectionTitle = tk.Label(master=gameactivityModeSelectionFrame, text= "Mode:",
+                                              font=("Arial", 20, "bold"))
+    gameactivityModeSelectionTitle.grid(row=0, column=0, sticky='W')
+    gameactivityOptionSelectionTitle = tk.Label(master=gameactivityModeSelectionFrame, text= "Options:",
+                                              font=("Arial", 20, "bold"))
+    gameactivityOptionSelectionTitle.grid(row=0, column=1, sticky='W')
+
+    listModeOptions = ["OCT to ASCII", "ASCII to OCT", "Binary To ASCII",
+                       "ASCII to Binary", "Binary to OCT", "OCT to Binary"]
+    translationMode = tk.IntVar()
+    for i in range(len(listModeOptions)):
+        gameactivityModeSelection = tk.Radiobutton(master=gameactivityModeSelectionFrame,
+                                               text= listModeOptions[i],
+                                               variable=translationMode,
+                                               value=i,
+                                               pady=10,
+                                               command=placeholder)
+    gameactivityModeSelection.grid(row=1, column=0, sticky='NW')
+
+    # Page 3: Chart
+    placeholderChartPage = ttk.Frame(mainNotebook) # Placeholder
+    placeholderChartPage.pack(fill='both', expand=True)
+
+
+    # mainNotebook Compiling
+    mainNotebook.add(placeholderTranslationPage, text='translation')
+    mainNotebook.add(gameactivityRoot, text='Game Activity')
+    mainNotebook.add(placeholderChartPage, text='chart')
 
     mainWindow.mainloop()
 

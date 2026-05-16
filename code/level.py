@@ -31,10 +31,10 @@ def writeExcel(sampleDataFrame, filename):
     sampleDataFrame.to_excel(excel_writer=excelFileNameConstant("Levels.xlsx"), sheet_name = filename)
     print("[writeExcel] - File Created.")
 
-def readExcel(filename):
+def readExcel(sheetname):
     """reads the Excel file into a DataFrame"""
     print("[readExcel] - Argument Recieved.")
-    output = pan.read_excel(io=excelFileNameConstant("Levels.xlsx"), sheet_name = filename, index_col=[0])
+    output = pan.read_excel(io=excelFileNameConstant("Levels.xlsx"), sheet_name = sheetname, index_col=[0])
     print("[readExcel] - Output returned")
     return output
 
@@ -135,10 +135,18 @@ def binaryCheck(text):
         print("[binaryCheck] - binary code verified and valid")
     else:
         raise CorruptedBinary
+    
+def dtToList(DataFrame, columnName):
+    return list(DataFrame.loc[:, columnName])
+
+def dtColumns(DataFrame):
+    return DataFrame.columns.tolist()
+    
 
 # Testing variables
 print(omniEncoder(["PpPPp", "Avacus", "Fireball"], "binary"))
-binaryCheck("0101000")
+binaryCheck("01010000")
 
-
+print(dtToList(readExcel("Levels.xlsx"), "Level 1"))
+print(dtColumns(readExcel("Levels.xlsx")))
 ## todo: check the error classes as it seems to be not be working properly.
