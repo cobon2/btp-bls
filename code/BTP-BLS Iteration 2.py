@@ -3,6 +3,7 @@ from tkinter import ttk as ttk # tkinter DLC
 import pandas as pan # handling the excel files 
 import numpy as np # randomization
 import os # file handling
+import time # for inducing delays
 
 # Classes
 ## Error Classes
@@ -65,7 +66,29 @@ def randomSelection(iterable, length):
     print("[randomSelection] - resultBasket returned")
     return resultBasket
 
+def levelselection():
+    """Adds functionality for level selection"""
 
+def gameRadioBoxSelection():
+    """Adds functionality for level mode selection"""
+
+def levelprobe():
+    """Probes the listbox's current variable"""
+    print(gameactivityLevelSelection.curselection())
+
+def levelselect():
+    """Converts the Listbox Options to a string-appropriate level"""
+    # Custom Function Depenencies: dtcolumns(),
+    option = list(gameactivityLevelSelection.curselection()) # sanitizes the listbox options
+    levels = dtColumns(levelsDataFrame)
+    print(option)
+    print(type(option))
+    if option[0] in range(len(levels)):
+        gameactivityOptionSelectionPlayLevel.config(text=f"Level: {levels[option[0]]}")
+        return levels[option[0]]
+    else:
+        print("[LOG] - levelselect() detected out of range options!")
+        pass
 
 ## UI
 
@@ -212,10 +235,11 @@ def imageFileNameConstant(fileName):
     return filenameConstant
 
 def dtColumns(DataFrame):
+    """extracts a column names of a dataframe and is converted to a list."""
     return DataFrame.columns.tolist()
 
 def extractDataFrames(dataframe, levelName = "Level1"):
-    "extracts a column of a dataframe and is converted to a list."
+    """extracts a column of a dataframe and is converted to a list."""
     nestedLevels = dataframe[levelName].tolist()
     return nestedLevels
 
@@ -223,15 +247,24 @@ def extractDataFrames(dataframe, levelName = "Level1"):
 # main
 def BTPBLS():
     """Main UI"""
+    # global selection:
+    global translationMode
+    global listModeOptions
+    global gameactivityLevelSelection
+    global levelsDataFrame
+    global gameactivityOptionSelectionPlayLevel
+
     # dataframe Initialization
     levelsDataFrame = readExcel("Levels.xlsx")
-    dtColumnName = dtColumns(readExcel("Levels.xlsx"))
+    dtColumnName = dtColumns(levelsDataFrame)
     # window(root) settings
     mainWindow = tk.Tk()
     mainWindow.title("BTP-BLS")
     mainWindow.geometry("600x400")
     logo = tk.PhotoImage(file = logoFileNameConstant())
     mainWindow.iconphoto(True, logo)
+
+
 
     ## notebook declaration
     mainNotebook = ttk.Notebook(mainWindow)
@@ -272,8 +305,8 @@ def BTPBLS():
     gameActivityImageLabel.pack(anchor='n')
     
     ### Mode Selection
-    listModeOptions = ["OCT to ASCII", "ASCII to OCT", "Binary To ASCII",
-                       "ASCII to Binary", "Binary to OCT", "OCT to Binary"]
+    listModeOptions = ["DEC to ASCII", "ASCII to DEC", "Binary To ASCII",
+                       "ASCII to Binary", "Binary to DEC", "DEC to Binary"]
     gameactivityModeSelectionFrame = tk.Frame(master=gameactivityRoot)
     gameactivityModeSelectionFrame.grid(row=2, column=1, sticky="NW")
     gameactivityModeSelectionFrame.columnconfigure(0, weight=1)
@@ -306,9 +339,10 @@ def BTPBLS():
 
     gameactivityOptionSelectionEdit = tk.Button(master=gameactivityModeSelectionFrame, text="Edit", width=20, command=placeholder) # placeholder for now as I have not made a function that selects the level to be edited.
     gameactivityOptionSelectionEdit.grid(column=2, row=1)
-    gameactivityOptionSelectionPlay = tk.Button(master=gameactivityModeSelectionFrame, text="Play", width=20, command=placeholder)
-    gameactivityOptionSelectionPlay.grid(column=2, row =2)
-
+    gameactivityOptionSelectionPlay = tk.Button(master=gameactivityModeSelectionFrame, text="Play", width=20, command=levelselect)
+    gameactivityOptionSelectionPlay.grid(column=2, row=2)
+    gameactivityOptionSelectionPlayLevel = tk.Label(master=gameactivityModeSelectionFrame, text="Level: ")
+    gameactivityOptionSelectionPlayLevel.grid(column=2, row=3, sticky="W")
 
 
 
