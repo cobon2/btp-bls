@@ -66,12 +66,6 @@ def randomSelection(iterable, length):
     print("[randomSelection] - resultBasket returned")
     return resultBasket
 
-def levelselection():
-    """Adds functionality for level selection"""
-
-def gameRadioBoxSelection():
-    """Adds functionality for level mode selection"""
-
 def levelprobe():
     """Probes the listbox's current variable"""
     print(gameactivityLevelSelection.curselection())
@@ -81,14 +75,19 @@ def levelselect():
     # Custom Function Depenencies: dtcolumns(),
     option = list(gameactivityLevelSelection.curselection()) # sanitizes the listbox options
     levels = dtColumns(levelsDataFrame)
-    print(option)
-    print(type(option))
     if option[0] in range(len(levels)):
         gameactivityOptionSelectionPlayLevel.config(text=f"Level: {levels[option[0]]}")
+        print(f"[LOG] - radioboxSelect() got {levels[option[0]]}")
         return levels[option[0]]
     else:
         print("[LOG] - levelselect() detected out of range options!")
         pass
+
+def radioboxSelect():
+    """Converts the Listbox Options to a string-appropriate level"""
+    option = translationMode.get()
+    print(f"[LOG] - radioboxSelect() got {listModeOptions[option]}")
+    return listModeOptions[option]
 
 ## UI
 
@@ -143,6 +142,8 @@ def binaryCheck(text):
 ## support/others
 ### Editing Program
 def editingProgram(iterable):
+    """Editting Program of the BTPTLS"""
+    # Todo: buit a feature that is able to save it to the database
     # Subfunctions:
     def addEntry():
         editListbox.insert(editListbox.size(), editEntrybox.get())
@@ -328,7 +329,7 @@ def BTPBLS():
                                                variable=translationMode,
                                                value=i,
                                                pady=10,
-                                               command=placeholder)
+                                               command=radioboxSelect)
         gameactivityModeSelection.grid(row=i+1, column=0, sticky='NW')
     
     gameactivityOptionFiller = tk.Frame(master=gameactivityModeSelectionFrame, width=260, height=260)
@@ -352,8 +353,7 @@ def BTPBLS():
     placeholderChartPage = ttk.Frame(mainNotebook) # Placeholder
     placeholderChartPage.pack(fill='both', expand=True)
 
-    # Probe: reliefs:
-    gameactivityRoot["relief"] = "sunken"
+
     # mainNotebook Compiling
     mainNotebook.add(placeholderTranslationPage, text='translation')
     mainNotebook.add(gameactivityRoot, text='Game Activity')
