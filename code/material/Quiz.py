@@ -211,6 +211,7 @@ def Quiz(strLevel, strOption):
     def submit():
         # Globals
         # HHHHHHHHHHHHHHHHHH
+        pass
 
     global page
     # constants
