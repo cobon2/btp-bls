@@ -1,0 +1,52 @@
+class UnknownArgument:
+    """An argument is not recognized by the function."""
+
+def omniEncoder(hlistLevelinput, output):
+    "Converts the string (ASCII) elements into the desired code."
+    # must encode sting to binary, ascii, and hex
+    # codes in respective order:
+    # hexadecimal = hex
+    # binary = bin
+    # decimal = ord
+    listLevelinput = hlistLevelinput
+    print(listLevelinput)
+    originalList = listLevelinput
+    if output == "binary":
+        # binary Translation
+        outputListLevel = listLevelinput
+        for i in range(len(listLevelinput)):
+            wordlist = []
+            for letter in listLevelinput[i]:
+                wordlist.append(letter)
+            wordlist = map(lambda x : "0" + str(bin(ord(x))[2:len(bin(ord(x)))]), wordlist)
+            outputListLevel[i] = " ".join(wordlist)
+        return outputListLevel
+    elif output == "hexadecimal":
+        # hexadecimal Translation
+        outputListLevel = listLevelinput
+        for i in range(len(listLevelinput)):
+            wordlist = []
+            for letter in listLevelinput[i]:
+                wordlist.append(letter)
+            wordlist = map(lambda x : "0" + str(hex(ord(x))[2:len(hex(ord(x)))]), wordlist)
+            outputListLevel[i] = " ".join(wordlist)
+        return outputListLevel
+    elif output == "decimal":
+        # decimal translation
+        outputListLevel = listLevelinput
+        for i in range(len(listLevelinput)):
+            wordlist = []
+            for letter in listLevelinput[i]:
+                wordlist.append(letter)
+            wordlist = map(lambda x : "0" + str(ord(x)), wordlist)
+            outputListLevel[i] = " ".join(wordlist)
+        return outputListLevel
+    elif output == "original":
+        return originalList 
+    else:
+        raise UnknownArgument
+
+moon = ['two', 'son', 'sir', 'mom', 'law', 'map', 'mud', 'pie', 'art', 'way']
+sun = moon
+omniEncoder(sun, "binary")
+print(moon)

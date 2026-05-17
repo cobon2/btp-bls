@@ -28,45 +28,46 @@ def readExcel(filename):
     print("[readExcel] - Output returned")
     return output
 
-def omniEncoder(listLevel, output):
+def omniEncoder(listLevelinput, output):
     "Converts the string (ASCII) elements into the desired code."
     # must encode sting to binary, ascii, and hex
     # codes in respective order:
     # hexadecimal = hex
     # binary = bin
     # decimal = ord
+    originalList = listLevelinput
     if output == "binary":
         # binary Translation
-        outputListLevel = listLevel
-        for i in range(len(listLevel)):
+        outputListLevel = listLevelinput
+        for i in range(len(listLevelinput)):
             wordlist = []
-            for letter in listLevel[i]:
+            for letter in listLevelinput[i]:
                 wordlist.append(letter)
             wordlist = map(lambda x : "0" + str(bin(ord(x))[2:len(bin(ord(x)))]), wordlist)
             outputListLevel[i] = " ".join(wordlist)
         return outputListLevel
     elif output == "hexadecimal":
         # hexadecimal Translation
-        outputListLevel = listLevel
-        for i in range(len(listLevel)):
+        outputListLevel = listLevelinput
+        for i in range(len(listLevelinput)):
             wordlist = []
-            for letter in listLevel[i]:
+            for letter in listLevelinput[i]:
                 wordlist.append(letter)
             wordlist = map(lambda x : "0" + str(hex(ord(x))[2:len(hex(ord(x)))]), wordlist)
             outputListLevel[i] = " ".join(wordlist)
         return outputListLevel
     elif output == "decimal":
         # decimal translation
-        outputListLevel = listLevel
-        for i in range(len(listLevel)):
+        outputListLevel = listLevelinput
+        for i in range(len(listLevelinput)):
             wordlist = []
-            for letter in listLevel[i]:
+            for letter in listLevelinput[i]:
                 wordlist.append(letter)
             wordlist = map(lambda x : "0" + str(ord(x)), wordlist)
             outputListLevel[i] = " ".join(wordlist)
         return outputListLevel
-    elif output =="original":
-        return listLevel
+    elif output == "original":
+        return originalList 
     else:
         raise UnknownArgument
 
@@ -136,20 +137,34 @@ def Quiz(strLevel, strOption):
 
         # modifying the next page:
         if pages == len(userAnswers) - 1:
+            quizQuestion.config(text=quizQuestionList[pages])
             quizPreviousButton.config(state="active")
             quizNextButton.config(state="disabled")
             quizSubmitButton.config(state="active")
             quizQuestionCount.config(text=f"Question {len(userAnswers)}")
+            if (userAnswers[page] == "Translate") or (userAnswers[page] == ""):
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, "Translate")
+            else:
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, userAnswers[page])
 
             quizPreviousButton["relief"] = "raised"
             quizNextButton["relief"] = "sunken"
             quizSubmitButton["relief"] = "raised"
 
         elif pages == 0:
+            quizQuestion.config(text=quizQuestionList[pages])
             quizPreviousButton.config(state="disabled")
             quizNextButton.config(state="active")
             quizSubmitButton.config(state="disabled")
             quizQuestionCount.config(text="Question 1")
+            if (userAnswers[page] == "Translate") or (userAnswers[page] == ""):
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, "Translate")
+            else:
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, userAnswers[page])
 
             quizPreviousButton["relief"] = "sunken"
             quizNextButton["relief"] = "raised"
@@ -160,6 +175,12 @@ def Quiz(strLevel, strOption):
             quizPreviousButton.config(state="active")
             quizNextButton.config(state="active")
             quizSubmitButton.config(state="disabled")
+            if (userAnswers[page] == "Translate") or (userAnswers[page] == ""):
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, "Translate")
+            else:
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, userAnswers[page])
 
             quizPreviousButton["relief"] = "raised"
             quizNextButton["relief"] = "raised"
@@ -178,30 +199,51 @@ def Quiz(strLevel, strOption):
 
         # modifying the next page:
         if pages == len(userAnswers) - 1:
+            quizQuestion.config(text=quizQuestionList[pages])
             quizPreviousButton.config(state="active")
             quizNextButton.config(state="disabled")
             quizSubmitButton.config(state="active")
-            quizQuestionCount.config(text=f"Question {len(userAnswers)}")
+            if (userAnswers[page] == "Translate") or (userAnswers[page] == ""):
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, "Translate")
+            else:
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, userAnswers[page])
 
             quizPreviousButton["relief"] = "raised"
             quizNextButton["relief"] = "sunken"
             quizSubmitButton["relief"] = "raised"
 
         elif pages == 0:
+            quizQuestion.config(text=quizQuestionList[pages])
             quizPreviousButton.config(state="disabled")
             quizNextButton.config(state="active")
             quizSubmitButton.config(state="disabled")
             quizQuestionCount.config(text="Question 1")
+            if (userAnswers[page] == "Translate") or (userAnswers[page] == ""):
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, "Translate")
+            else:
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, userAnswers[page])
 
             quizPreviousButton["relief"] = "sunken"
             quizNextButton["relief"] = "raised"
             quizSubmitButton["relief"] = "sunken"
         else:
+            
             quizQuestion.config(text=quizQuestionList[pages])
             quizQuestionCount.config(text="Question " + str(pages + 1))
             quizPreviousButton.config(state="active")
             quizNextButton.config(state="active")
             quizSubmitButton.config(state="disabled")
+            quizEntrybox.insert(0, "Translate")
+            if (userAnswers[page] == "Translate") or (userAnswers[page] == ""):
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, "Translate")
+            else:
+                quizEntrybox.delete(0, tk.END)
+                quizEntrybox.insert(0, userAnswers[page])
 
             quizPreviousButton["relief"] = "raised"
             quizNextButton["relief"] = "raised"
@@ -209,13 +251,87 @@ def Quiz(strLevel, strOption):
         page = pages
 
     def submit():
-        # Globals
-        # HHHHHHHHHHHHHHHHHH
-        pass
+        """Verifies user input"""
+        # global
+        global functionEvaluation
+        global CorrectAnswers
+        ## scrubbing
+        userAnswers[page] = quizEntrybox.get()
+        quizWindow.destroy()
+        def check(userAnswers, answerSheet):
+            """checks the user's questions"""
+            output = []
+            for i in range(len(userAnswers)):
+                if userAnswers[i] == answerSheet[i]:
+                    output.append("Correct")
+                else:
+                    output.append("Incorrect")
+            return output
+        
+        def qtyCorrect(iterable):
+            """Counts the correct user answers"""
+            count = 0
+            for i in iterable:
+                if i == "Correct":
+                    count =+ 1
+                else:
+                    continue
+        
+        functionEvaluation = check(userAnswers, quizAnswerList)
+        CorrectAnswers = qtyCorrect(functionEvaluation)                                   # comment
 
+        # UI
+        submitWindow = tk.Tk()
+        submitWindow.title("Results")
+        submitWindow.geometry("480x600")
+        #logo = tk.PhotoImage(file = logoFileNameConstant())
+        #submitWindow.iconphoto(True, logo)
+        submitWindowFrame = tk.Frame()
+        submitWindowFrame.pack()
+        
+        submitWindowFrame.columnconfigure(0, weight=1)
+        submitWindowFrame.columnconfigure(1, weight=1)
+        submitWindowFrame.columnconfigure(2, weight=1)
+        submitWindowFrame.columnconfigure(3, weight=1)
+        submitWindowFrame.rowconfigure(0, weight=1)
+        for i in range(len(userAnswers)):
+            submitWindowFrame.rowconfigure(i+1, weight=1)
+
+        
+        
+        submitWindowTitle1 = tk.Label(master=submitWindowFrame, text="Questions",
+                                     font=("Arial", 12, "bold"))
+        submitWindowTitle1.grid(row=0, column=0, sticky="W")
+        submitWindowTitle2 = tk.Label(master=submitWindowFrame, text="Your Answer",
+                                     font=("Arial", 12, "bold"))
+        submitWindowTitle2.grid(row=0, column=1, sticky="W")
+        submitWindowTitle3 = tk.Label(master=submitWindowFrame, text="Answer",
+                                     font=("Arial", 12, "bold"))
+        submitWindowTitle3.grid(row=0, column=2, sticky="W")
+        submitWindowTitle3 = tk.Label(master=submitWindowFrame, text="Remarks",
+                                     font=("Arial", 12, "bold"))
+        submitWindowTitle3.grid(row=0, column=3, sticky="W")
+        
+        for i in range(len(userAnswers)):
+            submitWindowColumn1 = tk.Label(master=submitWindowFrame,
+                                           text=f"Question {i+1}")
+            submitWindowColumn1.grid(column=0, row=i+1)
+            submitWindowColumn2 = tk.Label(master=submitWindowFrame,
+                                           text=userAnswers[i])
+            submitWindowColumn2.grid(column=1, row=i+1)
+            submitWindowColumn3 = tk.Label(master=submitWindowFrame,
+                                           text=quizAnswerList[i])
+            submitWindowColumn3.grid(column=2, row=i+1)
+            submitWindowColumn3 = tk.Label(master=submitWindowFrame,
+                                           text=functionEvaluation[i])
+            submitWindowColumn3.grid(column=3, row=i+1)
+        
+        submitWindow.mainloop()
+
+    # Globals:
     global page
+    global quizAnswerList
     # constants
-    
     quizItems = 10
     userAnswers = list(range(quizItems))
     for i in range(quizItems):
@@ -241,10 +357,12 @@ def Quiz(strLevel, strOption):
         case "DEC to Binary":
             strQuestionMode = "decimal"
             strAnswerMode = "binary"
-    quizBaselist = randomSelection(extractDataFrames(readExcel("Levels.xlsx"), strLevel), quizItems)
-    quizQuestionList = omniEncoder(quizBaselist, strQuestionMode)
-    quizAnswerList = omniEncoder(quizBaselist, strAnswerMode)
-
+    baseList = randomSelection(extractDataFrames(readExcel("Levels.xlsx"), strLevel), quizItems)
+    inputBaseList1 = baseList.copy()
+    inputBaseList2 = baseList.copy()
+    quizQuestionList = omniEncoder(inputBaseList1, strQuestionMode)
+    quizAnswerList = omniEncoder(inputBaseList2, strAnswerMode)
+    
     page = 0
 
     # UI
@@ -276,16 +394,15 @@ def Quiz(strLevel, strOption):
     quizPreviousButton["relief"] = "sunken"
     quizNextButton = tk.Button(master=quizButtonFrame, text="Next", command=nextPage)
     quizNextButton.pack(side="left")
-    quizSubmitButton = tk.Button(master=quizButtonFrame, text="Submit", command=gugugaga)
+    quizSubmitButton = tk.Button(master=quizButtonFrame, text="Submit", command=submit)
     quizSubmitButton.pack(side="left")
     quizSubmitButton.config(state="disabled")
     quizSubmitButton["relief"] = "sunken"
 
-
     # mainloop()
     quizWindow.mainloop()
 
-Quiz("Level 1", "ASCII to Binary")
+Quiz("Level 1", "Binary To ASCII")
 
 
     
