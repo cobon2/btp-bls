@@ -251,11 +251,12 @@ def BTPBLS():
     gameactivityRoot.rowconfigure(2, weight= 1)
     gameactivityRoot.columnconfigure(0, weight= 1)
     gameactivityRoot.columnconfigure(1, weight= 1)
+    gameactivityRoot.pack(fill='both', expand=True)
 
     ### Listbox
     gameactivityLevelSelectionLabel = tk.Label(master=gameactivityRoot, text="Level:", font=("Arial", 20, "bold"))
     gameactivityLevelSelectionLabel.grid(row=0, column=0, sticky="W")
-    gameactivityLevelSelection = tk.Listbox(master=gameactivityRoot, height=32)
+    gameactivityLevelSelection = tk.Listbox(master=gameactivityRoot, height=50)
     gameactivityLevelSelection.grid(row=1, column=0, rowspan=2)
     for i in range(len(dtColumnName)):
         gameactivityLevelSelection.insert(i, dtColumnName[i])
@@ -271,23 +272,22 @@ def BTPBLS():
     gameActivityImageLabel.pack(anchor='n')
     
     ### Mode Selection
+    listModeOptions = ["OCT to ASCII", "ASCII to OCT", "Binary To ASCII",
+                       "ASCII to Binary", "Binary to OCT", "OCT to Binary"]
     gameactivityModeSelectionFrame = tk.Frame(master=gameactivityRoot)
-    gameactivityModeSelectionFrame.grid(row=2, column=1)
-    gameactivityModeSelectionFrame.rowconfigure(0, weight=1)
-    gameactivityModeSelectionFrame.rowconfigure(1, weight=1)
-    gameactivityModeSelectionFrame.rowconfigure(2, weight=1)
+    gameactivityModeSelectionFrame.grid(row=2, column=1, sticky="NW")
     gameactivityModeSelectionFrame.columnconfigure(0, weight=1)
     gameactivityModeSelectionFrame.columnconfigure(1, weight=1)
+    gameactivityModeSelectionFrame.columnconfigure(2, weight=1)
+    gameactivityModeSelectionFrame.rowconfigure(0, weight=1)
+    gameactivityModeSelectionFrame.rowconfigure(1, weight=1)
+    for i in range(len(listModeOptions)):
+        gameactivityModeSelectionFrame.rowconfigure(i+1, weight=1)
 
     gameactivityModeSelectionTitle = tk.Label(master=gameactivityModeSelectionFrame, text= "Mode:",
                                               font=("Arial", 20, "bold"))
     gameactivityModeSelectionTitle.grid(row=0, column=0, sticky='W')
-    gameactivityOptionSelectionTitle = tk.Label(master=gameactivityModeSelectionFrame, text= "Options:",
-                                              font=("Arial", 20, "bold"))
-    gameactivityOptionSelectionTitle.grid(row=0, column=1, sticky='W')
 
-    listModeOptions = ["OCT to ASCII", "ASCII to OCT", "Binary To ASCII",
-                       "ASCII to Binary", "Binary to OCT", "OCT to Binary"]
     translationMode = tk.IntVar()
     for i in range(len(listModeOptions)):
         gameactivityModeSelection = tk.Radiobutton(master=gameactivityModeSelectionFrame,
@@ -296,13 +296,30 @@ def BTPBLS():
                                                value=i,
                                                pady=10,
                                                command=placeholder)
-    gameactivityModeSelection.grid(row=1, column=0, sticky='NW')
+        gameactivityModeSelection.grid(row=i+1, column=0, sticky='NW')
+    
+    gameactivityOptionFiller = tk.Frame(master=gameactivityModeSelectionFrame, width=260, height=260)
+    gameactivityOptionFiller.grid(row=0, column=1, rowspan=7)
+    gameactivityOptionSelectionTitle = tk.Label(master=gameactivityModeSelectionFrame, text= "Options:",
+                                              font=("Arial", 20, "bold"))
+    gameactivityOptionSelectionTitle.grid(row=0, column=2, sticky='W')
+
+    gameactivityOptionSelectionEdit = tk.Button(master=gameactivityModeSelectionFrame, text="Edit", width=20, command=placeholder) # placeholder for now as I have not made a function that selects the level to be edited.
+    gameactivityOptionSelectionEdit.grid(column=2, row=1)
+    gameactivityOptionSelectionPlay = tk.Button(master=gameactivityModeSelectionFrame, text="Play", width=20, command=placeholder)
+    gameactivityOptionSelectionPlay.grid(column=2, row =2)
+
+
+
+
+    ## todo: fix options
 
     # Page 3: Chart
     placeholderChartPage = ttk.Frame(mainNotebook) # Placeholder
     placeholderChartPage.pack(fill='both', expand=True)
 
-
+    # Probe: reliefs:
+    gameactivityRoot["relief"] = "sunken"
     # mainNotebook Compiling
     mainNotebook.add(placeholderTranslationPage, text='translation')
     mainNotebook.add(gameactivityRoot, text='Game Activity')
