@@ -89,6 +89,8 @@ def radioboxSelect():
 def Quiz():
     # strLevel, strOption
     """Quiz itself"""
+
+    print("Quiz Tagged.")
     # local Functions:
     def funcDelete():
         """Deletes the entry"""
@@ -238,25 +240,26 @@ def Quiz():
                     output.append("Incorrect")
             return output
         
-        def correctAnswers(iterable):
+        def qtyCorrect(iterable):
             """Counts the correct user answers"""
-            qtyOfCorrect = 0
+            count = 0
             for i in iterable:
                 if i == "Correct":
-                    qtyOfCorrect += 1
+                    count =+ 1
                 else:
                     continue
             
+        
         functionEvaluation = check(userAnswers, quizAnswerList)
-        CorrectAnswers = correctAnswers(functionEvaluation)                             # comment
+        CorrectAnswers = qtyCorrect(functionEvaluation)                                   # comment
 
-        print(functionEvaluation)
-        print(CorrectAnswers)
         # UI
         submitWindow = tk.Tk()
         submitWindow.title("Results")
         submitWindow.geometry("480x600")
-        submitWindowFrame = tk.Frame(master=submitWindow)
+        logo = tk.PhotoImage(file = logoFileNameConstant())
+        submitWindow.iconphoto(True, logo)
+        submitWindowFrame = tk.Frame()
         submitWindowFrame.pack()
         
         submitWindowFrame.columnconfigure(0, weight=1)
@@ -270,16 +273,16 @@ def Quiz():
         
         
         submitWindowTitle1 = tk.Label(master=submitWindowFrame, text="Questions",
-                                     font=("Arial", 12, "bold"), padx=10)
+                                     font=("Arial", 12, "bold"))
         submitWindowTitle1.grid(row=0, column=0, sticky="W")
         submitWindowTitle2 = tk.Label(master=submitWindowFrame, text="Your Answer",
-                                     font=("Arial", 12, "bold"), padx=10)
+                                     font=("Arial", 12, "bold"))
         submitWindowTitle2.grid(row=0, column=1, sticky="W")
         submitWindowTitle3 = tk.Label(master=submitWindowFrame, text="Answer",
-                                     font=("Arial", 12, "bold"), padx=10)
+                                     font=("Arial", 12, "bold"))
         submitWindowTitle3.grid(row=0, column=2, sticky="W")
         submitWindowTitle3 = tk.Label(master=submitWindowFrame, text="Remarks",
-                                     font=("Arial", 12, "bold"), padx=10)
+                                     font=("Arial", 12, "bold"))
         submitWindowTitle3.grid(row=0, column=3, sticky="W")
         
         for i in range(len(userAnswers)):
@@ -308,7 +311,6 @@ def Quiz():
         userAnswers[i] = 0
 
     # Encoders
-    strOption = radioboxSelect()
     match strOption:
         case "DEC to ASCII":
             strQuestionMode = "decimal"
@@ -328,19 +330,20 @@ def Quiz():
         case "DEC to Binary":
             strQuestionMode = "decimal"
             strAnswerMode = "binary"
-    baseList = randomSelection(extractDataFrames(readExcel("Levels.xlsx"), levelselect()), quizItems)
+    baseList = randomSelection(extractDataFrames(readExcel("Levels.xlsx"), strLevel), quizItems)
     inputBaseList1 = baseList.copy()
     inputBaseList2 = baseList.copy()
     quizQuestionList = omniEncoder(inputBaseList1, strQuestionMode)
     quizAnswerList = omniEncoder(inputBaseList2, strAnswerMode)
-
+    
     page = 0
 
     # UI
     quizWindow = tk.Tk()
     quizWindow.title("Game Activity")
     quizWindow.geometry("600x120")
-    
+    logo = tk.PhotoImage(file = logoFileNameConstant())
+    quizWindow.iconphoto(True, logo)
     # uncoment when it is at the main program
 
     quiztitle = tk.Label(text="Translate:", master=quizWindow, font=("Arial", 15, "bold"))
@@ -374,47 +377,43 @@ def Quiz():
 
 
 ## Translation
-def omniEncoder(hlistLevelinput, output):
+def omniEncoder(listLevel, output):
     "Converts the string (ASCII) elements into the desired code."
     # must encode sting to binary, ascii, and hex
     # codes in respective order:
     # hexadecimal = hex
     # binary = bin
     # decimal = ord
-    listLevelinput = hlistLevelinput
-    originalList = listLevelinput.copy()
     if output == "binary":
         # binary Translation
-        outputListLevel = listLevelinput
-        for i in range(len(listLevelinput)):
+        outputListLevel = listLevel
+        for i in range(len(listLevel)):
             wordlist = []
-            for letter in listLevelinput[i]:
+            for letter in listLevel[i]:
                 wordlist.append(letter)
             wordlist = map(lambda x : "0" + str(bin(ord(x))[2:len(bin(ord(x)))]), wordlist)
             outputListLevel[i] = " ".join(wordlist)
         return outputListLevel
     elif output == "hexadecimal":
         # hexadecimal Translation
-        outputListLevel = listLevelinput
-        for i in range(len(listLevelinput)):
+        outputListLevel = listLevel
+        for i in range(len(listLevel)):
             wordlist = []
-            for letter in listLevelinput[i]:
+            for letter in listLevel[i]:
                 wordlist.append(letter)
             wordlist = map(lambda x : "0" + str(hex(ord(x))[2:len(hex(ord(x)))]), wordlist)
             outputListLevel[i] = " ".join(wordlist)
         return outputListLevel
     elif output == "decimal":
         # decimal translation
-        outputListLevel = listLevelinput
-        for i in range(len(listLevelinput)):
+        outputListLevel = listLevel
+        for i in range(len(listLevel)):
             wordlist = []
-            for letter in listLevelinput[i]:
+            for letter in listLevel[i]:
                 wordlist.append(letter)
             wordlist = map(lambda x : "0" + str(ord(x)), wordlist)
             outputListLevel[i] = " ".join(wordlist)
         return outputListLevel
-    elif output == "original":
-        return originalList 
     else:
         raise UnknownArgument
 
@@ -426,11 +425,10 @@ def binaryCheck(text):
 
 ## support/others
 ### Editing Program
-def editingProgram():
+def editingProgram(iterable):
     """Editting Program of the BTPTLS"""
     # Todo: buit a feature that is able to save it to the database
     # Subfunctions:
-
     def addEntry():
         editListbox.insert(editListbox.size(), editEntrybox.get())
         editListbox.config(height = editListbox.size())
@@ -444,15 +442,13 @@ def editingProgram():
         print(editListbox.curselection())
         outputlist = list(editListbox.get(0, tk.END))
         print(f"[saveList] - Currently saved list: {str(outputlist)}")
-        exportDataframe = readExcel("Levels.xlsx")
-        exportDataframe[levelselect()] = outputlist
-        writeExcel(exportDataframe, "Levels.xlsx")
         return outputlist
     
-    iterable = extractDataFrames(readExcel("Levels.xlsx"), levelselect())
     # windowWordEdit
     windowWordEdit = tk.Tk()
     windowWordEdit.title = "Edit"
+    wordEditLogo = tk.PhotoImage(file = logoFileNameConstant())
+    windowWordEdit.iconphoto(True, wordEditLogo)
 
     # Three frames:
     ## listbox
@@ -463,7 +459,7 @@ def editingProgram():
     queryEditFrame = ttk.Frame(master=windowWordEdit)
     queryEditFrame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
-    buttonWordEditAccess = ttk.Frame(master=windowWordEdit)
+    buttonWordEditAccess = ttk.Frame()
     buttonWordEditAccess.rowconfigure(0, weight=1)
     buttonWordEditAccess.columnconfigure(0, weight=1)
     buttonWordEditAccess.columnconfigure(1, weight=1)
@@ -512,7 +508,7 @@ def editingProgram():
 def logoFileNameConstant():
     """Gets the file path of the logo"""
     mainDirectory = os.path.dirname(os.path.abspath(__file__))
-    logoPath = os.path.join(mainDirectory, "..", "images", "Logo.png")
+    logoPath = os.path.join(mainDirectory, "..", "images", "logo.png")
     filenameConstant = os.path.normpath(logoPath)
     return filenameConstant
 
@@ -629,9 +625,9 @@ def BTPBLS():
                                               font=("Arial", 20, "bold"))
     gameactivityOptionSelectionTitle.grid(row=0, column=2, sticky='W')
 
-    gameactivityOptionSelectionEdit = tk.Button(master=gameactivityModeSelectionFrame, text="Edit", width=20, command=editingProgram) # placeholder for now as I have not made a function that selects the level to be edited.
+    gameactivityOptionSelectionEdit = tk.Button(master=gameactivityModeSelectionFrame, text="Edit", width=20, command=Quiz) # placeholder for now as I have not made a function that selects the level to be edited.
     gameactivityOptionSelectionEdit.grid(column=2, row=1)
-    gameactivityOptionSelectionPlay = tk.Button(master=gameactivityModeSelectionFrame, text="Play", width=20, command=Quiz)
+    gameactivityOptionSelectionPlay = tk.Button(master=gameactivityModeSelectionFrame, text="Play", width=20, command=levelselect)
     gameactivityOptionSelectionPlay.grid(column=2, row=2)
     gameactivityOptionSelectionPlayLevel = tk.Label(master=gameactivityModeSelectionFrame, text="Level: ")
     gameactivityOptionSelectionPlayLevel.grid(column=2, row=3, sticky="W")

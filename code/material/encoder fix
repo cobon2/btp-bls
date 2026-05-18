@@ -45,8 +45,10 @@ def omniEncoder(hlistLevelinput, output):
         return originalList 
     else:
         raise UnknownArgument
+    
 
-moon = ['two', 'son', 'sir', 'mom', 'law', 'map', 'mud', 'pie', 'art', 'way']
+
+moon = ['son', 'art', 'sir', 'mud', 'two', 'way', 'map', 'mom', 'pie', 'law']
 sun = moon
-omniEncoder(sun, "binary")
-print(moon)
+omniEncoder(sun, "decimal")
+print(omniEncoder(sun, "original"))
