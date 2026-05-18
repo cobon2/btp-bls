@@ -229,6 +229,7 @@ def Quiz():
         quizWindow.destroy()
         def check(userAnswers, answerSheet):
             """checks the user's questions"""
+            global functionEvaluation
             output = []
             for i in range(len(userAnswers)):
                 if userAnswers[i] == answerSheet[i]:
@@ -245,6 +246,7 @@ def Quiz():
                     count =+ 1
                 else:
                     continue
+            
         
         functionEvaluation = check(userAnswers, quizAnswerList)
         CorrectAnswers = qtyCorrect(functionEvaluation)                                   # comment
