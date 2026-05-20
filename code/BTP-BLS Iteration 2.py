@@ -1,5 +1,6 @@
 import tkinter as tk # base tkinter
 from tkinter import ttk as ttk # tkinter DLC
+from tkinter.scrolledtext import ScrolledText # Scrollbox Feature of tkinter
 import pandas as pan # handling the excel files 
 import numpy as np # randomization
 import os # file handling
@@ -328,15 +329,15 @@ def Quiz():
     match strOption:
         case "DEC to ASCII":
             strQuestionMode = "decimal"
-            strAnswerMode = "original"
+            strAnswerMode = "ascii"
         case "ASCII to DEC":
-            strQuestionMode = "original"
+            strQuestionMode = "ascii"
             strAnswerMode = "decimal"
         case "Binary To ASCII":
             strQuestionMode = "binary"
-            strAnswerMode = "original"
+            strAnswerMode = "ascii"
         case "ASCII to Binary":
-            strQuestionMode = "original"
+            strQuestionMode = "ascii"
             strAnswerMode = "binary"
         case "Binary to DEC":
             strQuestionMode = "binary"
@@ -429,7 +430,7 @@ def omniEncoder(hlistLevelinput, output):
             wordlist = map(lambda x : "0" + str(ord(x)), wordlist)
             outputListLevel[i] = " ".join(wordlist)
         return outputListLevel
-    elif output == "original":
+    elif output == "ascii":
         return originalList 
     else:
         raise UnknownArgument
@@ -579,10 +580,53 @@ def BTPBLS():
     mainNotebook.pack(expand=True)
 
 
+
     # Translation Page
-    placeholderTranslationPage = ttk.Frame(mainNotebook) # Placeholder
-    placeholderTranslationPage.pack(fill='both', expand=True)
-    
+    TranslationPage = ttk.Frame(mainNotebook) # Placeholder
+    TranslationPage.pack(fill='both', expand=True)
+
+    titleInputTranslationPage1 = tk.Label(master=TranslationPage, text= "Input", font=("Arial", 20, "bold"))
+    titleInputTranslationPage1.pack(anchor= tk.W)
+
+    scrollentryInputTranslationPage1 = ScrolledText(master=TranslationPage, width=95,  height=21)
+    scrollentryInputTranslationPage1.pack(anchor= tk.W)
+
+    selectionFrameTranslation = tk.Frame(master=TranslationPage)
+    selectionFrameTranslation.pack(anchor= tk.W)
+
+    selectionFrameTranslationText1 = tk.Label(master = selectionFrameTranslation, text = "Input")
+    selectionFrameTranslationText1.pack(side="left")
+
+    translationOptions = ["Hexodecimal", "Binary", "Decimal", "ASCII (Text)"]
+
+    selectionFrameTranslationCombobox1 = ttk.Combobox(master=selectionFrameTranslation, values = translationOptions)
+    selectionFrameTranslationCombobox1.set("Code Options (Input)")
+    selectionFrameTranslationCombobox1.pack(side="left")
+
+    selectionFrameTranslationText2 = tk.Label(master = selectionFrameTranslation, text = "                                                  ")
+    selectionFrameTranslationText2.pack(side="left")
+
+    selectionFrameTranslationText3 = tk.Label(master = selectionFrameTranslation, text = "Output")
+    selectionFrameTranslationText3.pack(side="left")
+
+    selectionFrameTranslationCombobox2 = ttk.Combobox(master=selectionFrameTranslation, values = translationOptions)
+    selectionFrameTranslationCombobox2.set("Code Options (Output)")
+    selectionFrameTranslationCombobox2.pack(side="left")
+
+    selectionFrameTranslationText4 = tk.Label(master = selectionFrameTranslation, text = "                                                  ")
+    selectionFrameTranslationText4.pack(side="left")
+
+    selectionFrameTranslationButton = tk.Button(master = selectionFrameTranslation, text = "Translate", width=10)
+    selectionFrameTranslationButton.pack(side="left")
+
+    titleInputTranslationPage2 = tk.Label(master=TranslationPage, text= "Output", font=("Arial", 20, "bold"))
+    titleInputTranslationPage2.pack(anchor= tk.W)
+
+    scrollentryInputTranslationPage2 = ScrolledText(master=TranslationPage, width=95,  height=21)
+    scrollentryInputTranslationPage2.pack(anchor= tk.W)
+
+    titleInputTranslationPage2 = tk.Label(master=TranslationPage, text= "\nBinary Translation Program with Basic Learning System", font=("Arial", 10, "italic"))
+    titleInputTranslationPage2.pack()
 
     # Game UI
     ## Main Frame
@@ -661,9 +705,9 @@ def BTPBLS():
 
 
     # mainNotebook Compiling
-    mainNotebook.add(placeholderTranslationPage, text='translation')
+    mainNotebook.add(TranslationPage, text='Translation')
     mainNotebook.add(gameactivityRoot, text='Game Activity')
-    mainNotebook.add(placeholderChartPage, text='chart')
+    mainNotebook.add(placeholderChartPage, text='Chart')
 
     mainWindow.mainloop()
 
