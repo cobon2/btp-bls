@@ -69,15 +69,27 @@ def randomSelection(iterable, length):
 def levelselect():
     """Converts the Listbox Options to a string-appropriate level"""
     # Custom Function Depenencies: dtcolumns(),
-    option = list(gameactivityLevelSelection.curselection()) # sanitizes the listbox options
-    levels = dtColumns(levelsDataFrame)
-    if option[0] in range(len(levels)):
-        gameactivityOptionSelectionPlayLevel.config(text=f"Level: {levels[option[0]]}")
-        print(f"[LOG] - radioboxSelect() got {levels[option[0]]}")
-        return levels[option[0]]
-    else:
-        print("[LOG] - levelselect() detected out of range options!")
-        pass
+    try:
+        option = list(gameactivityLevelSelection.curselection()) # sanitizes the listbox options
+        levels = dtColumns(levelsDataFrame)
+        if option[0] in range(len(levels)):
+            gameactivityOptionSelectionPlayLevel.config(text=f"Level: {levels[option[0]]}")
+            print(f"[LOG] - radioboxSelect() got {levels[option[0]]}")
+            return levels[option[0]]
+        else:
+            print("[LOG] - levelselect() detected out of range options!")
+            pass
+    except IndexError:
+        print(f"[levelselect] - user has not selected its level option")
+        
+        errorWindow = tk.Tk()
+        errorWindow.title("Error: No Level Selected")
+        errorWindow.geometry("300x60")
+
+        errorPrompt = tk.Label(master=errorWindow, text="\nPlease an Level at the level selection.")
+        errorPrompt.pack()
+
+        errorWindow.mainloop()
 
 def radioboxSelect():
     """Converts the Listbox Options to a string-appropriate level"""
@@ -246,9 +258,13 @@ def Quiz():
                     qtyOfCorrect += 1
                 else:
                     continue
+            print(qtyOfCorrect)
+            return qtyOfCorrect
             
         functionEvaluation = check(userAnswers, quizAnswerList)
-        CorrectAnswers = correctAnswers(functionEvaluation)                             # comment
+        currentCorrectAnswers = correctAnswers(functionEvaluation)
+        CorrectAnswers.append(currentCorrectAnswers)                            # comment
+        print(f"[correctAnswers] - Total Correct Answers per Session: {CorrectAnswers}" )
 
         print(functionEvaluation)
         print(CorrectAnswers)
@@ -552,7 +568,7 @@ def BTPBLS():
     # window(root) settings
     mainWindow = tk.Tk()
     mainWindow.title("BTP-BLS")
-    mainWindow.geometry("600x400")
+    mainWindow.geometry("780x870")
     logo = tk.PhotoImage(file = logoFileNameConstant())
     mainWindow.iconphoto(True, logo)
 
@@ -652,6 +668,6 @@ def BTPBLS():
     mainWindow.mainloop()
 
 ## mainloop
-strLevel = ""
 strOption = ""
+CorrectAnswers = []
 BTPBLS()
