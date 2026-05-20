@@ -1,6 +1,7 @@
 import tkinter as tk # base tkinter
 from tkinter import ttk as ttk # tkinter DLC
 from tkinter.scrolledtext import ScrolledText # Scrollbox Feature of tkinter
+from tkinter import messagebox # for displaying errors
 import pandas as pan # handling the excel files 
 import numpy as np # randomization
 import os # file handling
@@ -82,15 +83,7 @@ def levelselect():
             pass
     except IndexError:
         print(f"[levelselect] - user has not selected its level option")
-        
-        errorWindow = tk.Tk()
-        errorWindow.title("Error: No Level Selected")
-        errorWindow.geometry("300x60")
-
-        errorPrompt = tk.Label(master=errorWindow, text="\nPlease an Level at the level selection.")
-        errorPrompt.pack()
-
-        errorWindow.mainloop()
+        messagebox.showwarning(title="IndexError Raised", message="Error: No Level Selected")
 
 def radioboxSelect():
     """Converts the Listbox Options to a string-appropriate level"""
@@ -389,7 +382,6 @@ def Quiz():
     # mainloop()
     quizWindow.mainloop()
 
-
 ## Translation
 def omniEncoder(hlistLevelinput, output):
     "Converts the string (ASCII) elements into the desired code."
@@ -434,6 +426,32 @@ def omniEncoder(hlistLevelinput, output):
         return originalList 
     else:
         raise UnknownArgument
+    
+def omniDecoder(iterable, inputMode):
+    """Converts any of the existing code into ascii code"""
+    match inputMode:
+        case "binary":
+            for word in range(len(iterable)):
+                wordBasket = iterable[word].split()
+                for i in range(len(wordBasket)):
+                    wordBasket[i] = chr(int(wordBasket[i], 2))
+            return "".join(wordBasket)
+        case "decimal":
+            for word in range(len(iterable)):
+                wordBasket = iterable[word].split()
+                for i in range(len(wordBasket)):
+                    wordBasket[i] = chr(int(wordBasket[i], 10))
+            return "".join(wordBasket)
+        case "hexadecimal":
+            for word in range(len(iterable)):
+                wordBasket = iterable[word].split()
+                for i in range(len(wordBasket)):
+                    wordBasket[i] = chr(int(wordBasket[i], 16))
+            return "".join(wordBasket)
+        case "original":
+            return iterable
+        case "ascii":
+            return iterable
 
 def binaryCheck(text):
     if len(text) == 8:
@@ -525,6 +543,62 @@ def editingProgram():
     # mainloop()
     windowWordEdit.mainloop()
 
+# others
+def translatebutton():
+    def sanitizeList(iterable):
+        extractedword = iterable[0]
+        extractedlist = extractedword.split('\n')
+        if len(extractedlist) > 1:
+            extractedlist.pop()
+            return extractedlist
+        else:
+            return extractedlist
+    try: 
+        # Getting some variables
+        translateInput = selectionFrameTranslationCombobox1.get()
+        translateOutput = selectionFrameTranslationCombobox2.get()
+        translateUserInputList = [""]
+        translateUserInputList[0] = scrollentryInputTranslationPage1.get(1.0, tk.END)
+        match translateInput:
+            case "Hexedecimal":
+                translateModeInput = "hexadecimal"
+            case "Binary":
+                translateModeInput = "binary"
+            case "Decimal":
+                translateModeInput = "decimal"
+            case "ASCII (Text)":
+                translateModeInput = "ascii"
+
+        match translateOutput:
+            case "Hexedecimal":
+                translateModeOutput = "hexadecimal"
+            case "Binary":
+                translateModeOutput = "binary"
+            case "Decimal":
+                translateModeOutput = "decimal"
+            case "ASCII (Text)":
+                translateModeOutput = "ascii"
+
+        # Code Processing
+        sanitizedoutput = sanitizeList(omniDecoder(translateUserInputList, translateModeInput))
+        #sanitizedoutput.pop()
+        print(f"[translatebutton] - sanitizedoutput ({sanitizedoutput})")
+        outputlist = omniEncoder(sanitizedoutput, translateModeOutput)
+        print(f"[translatebutton] - outputlist ({outputlist})")
+
+        # Placement
+        scrollentryInputTranslationPage2.config(state= 'normal')
+        scrollentryInputTranslationPage2.delete("1.0", tk.END)
+        scrollentryInputTranslationPage2.insert(tk.INSERT, (outputlist[0]))
+        scrollentryInputTranslationPage2.config(state= 'disable')
+        ## (no selection of options will result in UnboundLocalError)
+        ## (incorrect selection will result in ValueError)
+    except UnboundLocalError:
+        messagebox.showwarning(title="UnboundLocalError Raised", message="Please set your input and output modes.")
+    except ValueError:
+        messagebox.showwarning(title="UnboundLocalError Raised", message="Please correctly set your input/output modes and input text.")
+
+
 ### File Handling
 def logoFileNameConstant():
     """Gets the file path of the logo"""
@@ -559,6 +633,11 @@ def BTPBLS():
     global gameactivityLevelSelection
     global levelsDataFrame
     global gameactivityOptionSelectionPlayLevel
+
+    global selectionFrameTranslationCombobox1
+    global selectionFrameTranslationCombobox2
+    global scrollentryInputTranslationPage1
+    global scrollentryInputTranslationPage2
 
     # global variables
     quizSelection = ""
@@ -597,7 +676,7 @@ def BTPBLS():
     selectionFrameTranslationText1 = tk.Label(master = selectionFrameTranslation, text = "Input")
     selectionFrameTranslationText1.pack(side="left")
 
-    translationOptions = ["Hexodecimal", "Binary", "Decimal", "ASCII (Text)"]
+    translationOptions = ["Hexedecimal", "Binary", "Decimal", "ASCII (Text)"]
 
     selectionFrameTranslationCombobox1 = ttk.Combobox(master=selectionFrameTranslation, values = translationOptions)
     selectionFrameTranslationCombobox1.set("Code Options (Input)")
@@ -616,7 +695,7 @@ def BTPBLS():
     selectionFrameTranslationText4 = tk.Label(master = selectionFrameTranslation, text = "                                                  ")
     selectionFrameTranslationText4.pack(side="left")
 
-    selectionFrameTranslationButton = tk.Button(master = selectionFrameTranslation, text = "Translate", width=10)
+    selectionFrameTranslationButton = tk.Button(master = selectionFrameTranslation, text = "Translate", width=10, command=translatebutton)
     selectionFrameTranslationButton.pack(side="left")
 
     titleInputTranslationPage2 = tk.Label(master=TranslationPage, text= "Output", font=("Arial", 20, "bold"))
@@ -624,6 +703,7 @@ def BTPBLS():
 
     scrollentryInputTranslationPage2 = ScrolledText(master=TranslationPage, width=95,  height=21)
     scrollentryInputTranslationPage2.pack(anchor= tk.W)
+    scrollentryInputTranslationPage2.config(state= 'disabled')
 
     titleInputTranslationPage2 = tk.Label(master=TranslationPage, text= "\nBinary Translation Program with Basic Learning System", font=("Arial", 10, "italic"))
     titleInputTranslationPage2.pack()
