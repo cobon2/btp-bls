@@ -5,6 +5,7 @@ from tkinter import messagebox # for displaying errors
 import pandas as pan # handling the excel files 
 import numpy as np # randomization
 import os # file handling
+import matplotlib.pyplot as pl # statistic bars
 import time # for inducing delays
 
 # Classes
@@ -90,6 +91,54 @@ def radioboxSelect():
     option = translationMode.get()
     print(f"[LOG] - radioboxSelect() got {listModeOptions[option]}")
     return listModeOptions[option]
+
+### GUH
+#def statistics(listWins, listLoss):
+    def average(iterable):
+        return sum(iterable)/len(iterable)
+
+    def plotFileNameConstant(fileName):
+        """Gets the file path of the matplotlib line plot"""
+        mainDirectory = os.path.dirname(os.path.abspath(__file__))
+        logoPath = os.path.join(mainDirectory, "..", "statistics", fileName)
+        filenameConstant = os.path.normpath(logoPath)
+        return filenameConstant
+
+    if (len(listWins) >= 10) and (len(listLoss) >= 10):
+        global meanWinData
+        global sumWinData
+        global sumLoseData
+        
+        # Data Processing
+        levelChosen = radioboxSelect()
+        meanWinData = average(listWins)
+        sumWinData = sum(listWins)
+        sumLoseData = sum(listLoss)
+
+        # Plotting
+        pl.plot(range(len(listWins)), listWins)
+        pl.title(levelChosen)
+        pl.xlabel("Timeline")
+        pl.ylabel("Wins")
+
+        # plot Saving
+        currentDir = os.getcwd()
+        tempDir = os.path.dirname(os.path.abspath(__file__))
+        tempDir = os.path.join(tempDir, "..", "statistics")
+        os.chdir(tempDir)
+        pl.savefig(f"{levelChosen}_Statistic.png", dpi = 300, bbox_inches='tight')
+        os.chdir(currentDir)
+
+        # test display
+        statisticwindow = tk.Tk()
+        statisticwindow.title("Statistic")
+                        
+        statisticImage = tk.PhotoImage(plotFileNameConstant(file=f"{levelChosen}_Statistic.png"))
+        gameActivityImageLabel.config(image=statisticImage)
+        
+    else:
+        print("[statistics] - less than 10 elements found between the provided elements.")
+        pass
 
 ## UI
 def Quiz():
@@ -230,6 +279,7 @@ def Quiz():
         # global
         global functionEvaluation
         global CorrectAnswers
+        global currentIncorrectAnswers
         ## scrubbing
         userAnswers[page] = quizEntrybox.get()
         quizWindow.destroy()
@@ -653,6 +703,7 @@ def BTPBLS():
     global selectionFrameTranslationCombobox2
     global scrollentryInputTranslationPage1
     global scrollentryInputTranslationPage2
+    global gameActivityImageLabel
 
     # global variables
     quizSelection = ""
