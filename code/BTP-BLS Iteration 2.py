@@ -497,13 +497,9 @@ def editingProgram():
     iterable = extractDataFrames(readExcel("Levels.xlsx"), levelselect())
     # windowWordEdit
     windowWordEdit = tk.Tk()
-    windowWordEdit.title = "Edit"
+    windowWordEdit.title("Edit")
 
     # Three frames:
-    ## listbox
-    wordEditFrame = ttk.Frame(master=windowWordEdit)
-    wordEditFrame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
-
     ## query
     queryEditFrame = ttk.Frame(master=windowWordEdit)
     queryEditFrame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
@@ -516,12 +512,26 @@ def editingProgram():
     buttonWordEditAccess.columnconfigure(3, weight=1)
     buttonWordEditAccess.pack()
 
+    ## listbox
+    wordEditFrame = ttk.Frame(master=windowWordEdit)
+    wordEditFrame.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
+
+    # buttonWordEditAccess
+    addButton = tk.Button(text="Add", command=addEntry, master= buttonWordEditAccess)
+    addButton.grid(row=0, column=0)
+
+    deleteButton = tk.Button(text="Delete", command=deleteEntry, master= buttonWordEditAccess)
+    deleteButton.grid(row=0, column=1)
+
+    saveButton = tk.Button(text="Save", command=saveList, master= buttonWordEditAccess)
+    saveButton.grid(row=0, column=2)
+
     # scrollbar
-    wordEditFrameScrollbar = ttk.Scrollbar(wordEditFrame)
+    wordEditFrameScrollbar = ttk.Scrollbar(windowWordEdit)
     wordEditFrameScrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
     # listbox
-    editListbox = tk.Listbox(width = 12, selectmode=tk.MULTIPLE, master= wordEditFrame,
+    editListbox = tk.Listbox(width = 12, height = 1, selectmode=tk.MULTIPLE, master= wordEditFrame,
                             font=("Arial", 20))
     editListbox.pack()
 
@@ -536,16 +546,6 @@ def editingProgram():
     editEntrybox = tk.Entry(master=queryEditFrame)
     editEntrybox.pack(side = tk.RIGHT)
 
-    # buttonWordEditAccess
-    addButton = tk.Button(text="Add", command=addEntry, master= buttonWordEditAccess)
-    addButton.grid(row=0, column=0)
-
-    deleteButton = tk.Button(text="Delete", command=deleteEntry, master= buttonWordEditAccess)
-    deleteButton.grid(row=0, column=1)
-
-    saveButton = tk.Button(text="Save", command=saveList, master= buttonWordEditAccess)
-    saveButton.grid(row=0, column=2)
-
     # wordEditFrame Scrollbar Access
     editListbox['yscrollcommand']=wordEditFrameScrollbar.set
     wordEditFrameScrollbar.config(command=editListbox.yview)
@@ -557,7 +557,11 @@ def editingProgram():
 def translatebutton():
     """Back-end function of the translation program"""
     def sanitizeList(iterable):
-        extractedword = iterable[0]
+        print(type(iterable))
+        if type(iterable) == list:
+            extractedword = iterable[0]
+        else:
+            extractedword = iterable
         extractedlist = extractedword.split('\n')
         if len(extractedlist) > 1:
             extractedlist.pop()
@@ -780,7 +784,7 @@ def BTPBLS():
                                               font=("Arial", 20, "bold"))
     gameactivityOptionSelectionTitle.grid(row=0, column=2, sticky='W')
 
-    gameactivityOptionSelectionEdit = tk.Button(master=gameactivityModeSelectionFrame, text="Edit", width=20, command=editingProgram) # placeholder for now as I have not made a function that selects the level to be edited.
+    gameactivityOptionSelectionEdit = tk.Button(master=gameactivityModeSelectionFrame, text="Edit (Unstable)", width=20, command=editingProgram) # placeholder for now as I have not made a function that selects the level to be edited.
     gameactivityOptionSelectionEdit.grid(column=2, row=1)
     gameactivityOptionSelectionPlay = tk.Button(master=gameactivityModeSelectionFrame, text="Play", width=20, command=Quiz)
     gameactivityOptionSelectionPlay.grid(column=2, row=2)
