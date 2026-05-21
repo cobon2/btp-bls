@@ -93,7 +93,12 @@ def radioboxSelect():
     return listModeOptions[option]
 
 ### GUH
-#def statistics(listWins, listLoss):
+def statisticLevelInitialization(LevelName):
+    """statistic Initialization"""
+    # Tasks:
+    # Load prior txt files
+    # process some statistical data
+    # plot latest matplotlib
     def average(iterable):
         return sum(iterable)/len(iterable)
 
@@ -103,14 +108,21 @@ def radioboxSelect():
         logoPath = os.path.join(mainDirectory, "..", "statistics", fileName)
         filenameConstant = os.path.normpath(logoPath)
         return filenameConstant
-
+    
+    # inputs:
+    levelChosen = levelselect()
+    listWins = txtToIntList(f"{LevelName} Win Statistic.txt")
+    listLoss = txtToIntList(f"{LevelName} Loss Statistic.txt")
+    
     if (len(listWins) >= 10) and (len(listLoss) >= 10):
+        # globals
         global meanWinData
         global sumWinData
         global sumLoseData
-        
+        global gameActivityImageLabel
+        global placeholderStatistic
+
         # Data Processing
-        levelChosen = radioboxSelect()
         meanWinData = average(listWins)
         sumWinData = sum(listWins)
         sumLoseData = sum(listLoss)
@@ -127,18 +139,21 @@ def radioboxSelect():
         tempDir = os.path.join(tempDir, "..", "statistics")
         os.chdir(tempDir)
         pl.savefig(f"{levelChosen}_Statistic.png", dpi = 300, bbox_inches='tight')
-        os.chdir(currentDir)
 
         # test display
         statisticwindow = tk.Tk()
         statisticwindow.title("Statistic")
-                        
-        statisticImage = tk.PhotoImage(plotFileNameConstant(file=f"{levelChosen}_Statistic.png"))
-        gameActivityImageLabel.config(image=statisticImage)
-        
+        print(os.getcwd())
+        #plotFileNameConstant(f"{levelChosen}_Statistic.png")
+        print(levelChosen)
+        #gameActivityImageLabel.destroy()
+        placeholderStatistic = tk.PhotoImage(f"{levelChosen}_Statistic.png")
+        gameActivityImageLabel.configure(text=pl.show())
+        os.chdir(currentDir)
     else:
         print("[statistics] - less than 10 elements found between the provided elements.")
         pass
+#
 
 ## UI
 def Quiz():
@@ -315,14 +330,24 @@ def Quiz():
                     continue
             print(qtyOfCorrect)
             return qtyOfCorrect
-            
+        
+        # iterable saving
         functionEvaluation = check(userAnswers, quizAnswerList)
         currentCorrectAnswers = correctAnswers(functionEvaluation)
         currentIncorrectAnswers = wrongAnswers(functionEvaluation)
+        CorrectAnswers = txtToIntList(f"{selectedLevel} Win Statistic.txt")
+        IncorrectAnswers = txtToIntList(f"{selectedLevel} Loss Statistic.txt")
         IncorrectAnswers.append(currentCorrectAnswers)
         CorrectAnswers.append(currentCorrectAnswers)
+        intListToTxT(CorrectAnswers, f"{selectedLevel} Win Statistic.txt")
         print(f"[correctAnswers] - Total Correct Answers per Session: {CorrectAnswers}" )
-        print(functionEvaluation)
+        intListToTxT(IncorrectAnswers, f"{selectedLevel} Loss Statistic.txt")
+        print(f"[correctAnswers] - Total Incorrect Answers per Session: {IncorrectAnswers}" )
+        statisticLevelInitialization(levelselect())
+        print("[Quiz.Submit] - Data Saved.")
+
+        
+
         # UI
         submitWindow = tk.Tk()
         submitWindow.title("Results")
@@ -397,6 +422,8 @@ def Quiz():
         case "DEC to Binary":
             strQuestionMode = "decimal"
             strAnswerMode = "binary"
+    
+    selectedLevel = levelselect()
     baseList = randomSelection(extractDataFrames(readExcel("Levels.xlsx"), levelselect()), quizItems)
     inputBaseList1 = baseList.copy()
     inputBaseList2 = baseList.copy()
@@ -688,6 +715,36 @@ def extractDataFrames(dataframe, levelName = "Level1"):
     nestedLevels = dataframe[levelName].tolist()
     return nestedLevels
 
+def intListToTxT(iterable, fileName):
+    currentDir = os.getcwd()
+    tempDir = os.path.dirname(os.path.abspath(__file__))
+    tempDir = os.path.join(tempDir, "..", "statistics")
+    os.chdir(tempDir)
+    tempIterable = iterable
+    for i in range(len(tempIterable)):
+        tempIterable[i] = str(tempIterable[i])
+    exportFile = " - ".join(tempIterable)
+    with open(fileName, "w") as file:
+        file.write(exportFile)
+    os.chdir(currentDir)
+    print("[intListToTxT] - Txt overwritten.")
+
+def txtToIntList(fileName):
+    currentDir = os.getcwd()
+    tempDir = os.path.dirname(os.path.abspath(__file__))
+    tempDir = os.path.join(tempDir, "..", "statistics")
+    os.chdir(tempDir)
+    print(f"[txtToIntList] - {fileName} directory: {os.getcwd()}")
+    with open(fileName) as file:
+        fileString = file.read()
+    outputIterable = fileString.split(" - ")
+    for i in range(len(outputIterable)):
+        outputIterable[i] = int(outputIterable[i])
+    print(f"[txtToIntList] - {fileName} has been converted into an iterable")
+    os.chdir(currentDir)
+    return outputIterable
+    
+
 
 # main
 def BTPBLS():
@@ -704,6 +761,7 @@ def BTPBLS():
     global scrollentryInputTranslationPage1
     global scrollentryInputTranslationPage2
     global gameActivityImageLabel
+    global placeholderStatistic
 
     # global variables
     quizSelection = ""
@@ -715,6 +773,7 @@ def BTPBLS():
     mainWindow = tk.Tk()
     mainWindow.title("BTP-BLS")
     mainWindow.geometry("780x870")
+    mainWindow.config(bg="#546B41")
     logo = tk.PhotoImage(file = logoFileNameConstant())
     mainWindow.iconphoto(True, logo)
 
@@ -723,8 +782,8 @@ def BTPBLS():
     ## notebook declaration
     mainNotebook = ttk.Notebook(mainWindow)
     mainNotebook.pack(expand=True)
-
-
+    
+    
 
     # Translation Page
     TranslationPage = ttk.Frame(mainNotebook) # Placeholder
@@ -732,6 +791,7 @@ def BTPBLS():
 
     titleInputTranslationPage1 = tk.Label(master=TranslationPage, text= "Input", font=("Arial", 20, "bold"))
     titleInputTranslationPage1.pack(anchor= tk.W)
+    
 
     scrollentryInputTranslationPage1 = ScrolledText(master=TranslationPage, width=95,  height=21)
     scrollentryInputTranslationPage1.pack(anchor= tk.W)
@@ -842,19 +902,11 @@ def BTPBLS():
     gameactivityOptionSelectionPlayLevel = tk.Label(master=gameactivityModeSelectionFrame, text="Level: ")
     gameactivityOptionSelectionPlayLevel.grid(column=2, row=3, sticky="W")
 
-
     ## todo: fix options
-
-    # Page 3: Chart
-    placeholderChartPage = ttk.Frame(mainNotebook) # Placeholder
-    placeholderChartPage.pack(fill='both', expand=True)
-
 
     # mainNotebook Compiling
     mainNotebook.add(TranslationPage, text='Translation')
     mainNotebook.add(gameactivityRoot, text='Game Activity')
-    mainNotebook.add(placeholderChartPage, text='Chart')
-
     mainWindow.mainloop()
 
 ## mainloop
