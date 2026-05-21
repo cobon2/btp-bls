@@ -86,7 +86,7 @@ def levelselect():
         messagebox.showwarning(title="IndexError Raised", message="Error: No Level Selected")
 
 def radioboxSelect():
-    """Converts the Listbox Options to a string-appropriate level"""
+    """Converts the RadioBox Options to a string-appropriate level"""
     option = translationMode.get()
     print(f"[LOG] - radioboxSelect() got {listModeOptions[option]}")
     return listModeOptions[option]
@@ -254,14 +254,25 @@ def Quiz():
                     continue
             print(qtyOfCorrect)
             return qtyOfCorrect
+        
+        def wrongAnswers(iterable):
+            """Counts the correct user answers"""
+            qtyOfCorrect = 0
+            for i in iterable:
+                if i == "Incorrect":
+                    qtyOfCorrect += 1
+                else:
+                    continue
+            print(qtyOfCorrect)
+            return qtyOfCorrect
             
         functionEvaluation = check(userAnswers, quizAnswerList)
         currentCorrectAnswers = correctAnswers(functionEvaluation)
-        CorrectAnswers.append(currentCorrectAnswers)                            # comment
+        currentIncorrectAnswers = wrongAnswers(functionEvaluation)
+        IncorrectAnswers.append(currentCorrectAnswers)
+        CorrectAnswers.append(currentCorrectAnswers)
         print(f"[correctAnswers] - Total Correct Answers per Session: {CorrectAnswers}" )
-
         print(functionEvaluation)
-        print(CorrectAnswers)
         # UI
         submitWindow = tk.Tk()
         submitWindow.title("Results")
@@ -277,8 +288,6 @@ def Quiz():
         for i in range(len(userAnswers)):
             submitWindowFrame.rowconfigure(i+1, weight=1)
 
-        
-        
         submitWindowTitle1 = tk.Label(master=submitWindowFrame, text="Questions",
                                      font=("Arial", 12, "bold"), padx=10)
         submitWindowTitle1.grid(row=0, column=0, sticky="W")
@@ -454,6 +463,7 @@ def omniDecoder(iterable, inputMode):
             return iterable
 
 def binaryCheck(text):
+    """Verifies the length of the binary"""
     if len(text) == 8:
         print("[binaryCheck] - binary code verified and valid")
     else:
@@ -545,6 +555,7 @@ def editingProgram():
 
 # others
 def translatebutton():
+    """Back-end function of the translation program"""
     def sanitizeList(iterable):
         extractedword = iterable[0]
         extractedlist = extractedword.split('\n')
@@ -601,13 +612,13 @@ def translatebutton():
 
 ### File Handling
 def logoFileNameConstant():
-    """Gets the file path of the logo"""
+    """Logo.png file directory constant"""
     mainDirectory = os.path.dirname(os.path.abspath(__file__))
     logoPath = os.path.join(mainDirectory, "..", "images", "Logo.png")
     filenameConstant = os.path.normpath(logoPath)
     return filenameConstant
 
-def imageFileNameConstant(fileName):
+def imageFileName(fileName):
     """Gets the file path of the logo"""
     mainDirectory = os.path.dirname(os.path.abspath(__file__))
     logoPath = os.path.join(mainDirectory, "..", "images", fileName)
@@ -732,7 +743,7 @@ def BTPBLS():
     gameactivityImageFrame = tk.Frame(master=gameactivityRoot)
     gameactivityImageFrame.grid(row=1, column=1)
     gameActivityImageLabel = tk.Label(gameactivityImageFrame, text="Play at least 10 games to show statistic.")
-    placeholderStatistic = tk.PhotoImage(file=imageFileNameConstant("PlaceholderStatistic.png"))
+    placeholderStatistic = tk.PhotoImage(file=imageFileName("PlaceholderStatistic.png"))
     gameActivityImageLabel.config(image=placeholderStatistic, compound= tk.BOTTOM)
     gameActivityImageLabel.pack(anchor='n')
     
@@ -794,4 +805,5 @@ def BTPBLS():
 ## mainloop
 strOption = ""
 CorrectAnswers = []
+IncorrectAnswers = []
 BTPBLS()
