@@ -93,6 +93,9 @@ def radioboxSelect():
     return listModeOptions[option]
 
 ### GUH
+def statisticsButton():
+    statisticLevelInitialization(levelselect())
+
 def statisticLevelInitialization(LevelName):
     """statistic Initialization"""
     # Tasks:
@@ -108,6 +111,14 @@ def statisticLevelInitialization(LevelName):
         logoPath = os.path.join(mainDirectory, "..", "statistics", fileName)
         filenameConstant = os.path.normpath(logoPath)
         return filenameConstant
+    
+    def streakWinsConstant():
+        streakWins = 0
+        for i in range(len(listWins)):
+            if listWins[i] > 0:
+                streakWins += 1
+            else:
+                streakWins = 0
     
     # inputs:
     levelChosen = levelselect()
@@ -148,8 +159,46 @@ def statisticLevelInitialization(LevelName):
         print(levelChosen)
         #gameActivityImageLabel.destroy()
         placeholderStatistic = tk.PhotoImage(f"{levelChosen}_Statistic.png")
-        gameActivityImageLabel.configure(text=pl.show())
+        #gameActivityImageLabel.configure(text=pl.show())
         os.chdir(currentDir)
+
+        statisticFrame = tk.Frame(master=statisticwindow)
+        statisticFrame.pack()
+
+        statisticFrame.rowconfigure(0, weight=1)
+        statisticFrame.rowconfigure(1, weight=1)
+        statisticFrame.rowconfigure(2, weight=1)
+        statisticFrame.rowconfigure(3, weight=1)
+        statisticFrame.rowconfigure(4, weight=1)
+
+        statisticFrame.columnconfigure(0, weight=1)
+        statisticFrame.columnconfigure(1, weight=1)
+
+        statisticText1 = tk.Label(master=statisticFrame, text="Statistics", font=("Arial", 20, "bold"))
+        statisticText1.grid(column=0, row=0, sticky=tk.W)
+
+        statisticText2 = tk.Label(master=statisticFrame, text="Total Wins:")
+        statisticText2.grid(column=0, row=1, sticky=tk.W)
+
+        statisticText3 = tk.Label(master=statisticFrame, text="Mean Wins:")
+        statisticText3.grid(column=0, row=2, sticky=tk.W)
+
+        statisticText4 = tk.Label(master=statisticFrame, text="Total Losses:")
+        statisticText4.grid(column=0, row=3, sticky=tk.W)
+
+        statisticText5 = tk.Label(master=statisticFrame, text=sumWinData)
+        statisticText5.grid(column=1, row=1, sticky=tk.W)
+
+        statisticText6 = tk.Label(master=statisticFrame, text=meanWinData)
+        statisticText6.grid(column=1, row=2, sticky=tk.W)
+
+        statisticText7 = tk.Label(master=statisticFrame, text=sumLoseData)
+        statisticText7.grid(column=1, row=3, sticky=tk.W)
+
+        statisticText8 = tk.Label(master=statisticFrame, text=pl.show())
+        statisticText8.grid(column=1, row=4, sticky=tk.W)
+
+
     else:
         print("[statistics] - less than 10 elements found between the provided elements.")
         pass
@@ -901,7 +950,8 @@ def BTPBLS():
     gameactivityOptionSelectionPlay.grid(column=2, row=2)
     gameactivityOptionSelectionPlayLevel = tk.Label(master=gameactivityModeSelectionFrame, text="Level: ")
     gameactivityOptionSelectionPlayLevel.grid(column=2, row=3, sticky="W")
-
+    gameactivityOptionSelectionStatistic = tk.Button(master=gameactivityModeSelectionFrame, text="Statistic", width=20, command=statisticsButton)
+    gameactivityOptionSelectionStatistic.grid(column=2, row=4)
     ## todo: fix options
 
     # mainNotebook Compiling
